@@ -173,5 +173,48 @@ namespace $.$$ {
 			}
 			return undefined as any
 		}
+
+		@$mol_mem
+		current_map() {
+			return $apxu_samosbor_map_storage.current()
+		}
+
+		@$mol_mem
+		role_controller_visible(): readonly ( any )[] {
+			if( this.is_admin() ) {
+				return [ this.RolesController() ]
+			}
+			return []
+		}
+		@$mol_action
+		add_public_key( e?: any ) {
+			const pub_key = this.pub_key_value()
+			this.current_map()?.roles().add_key( pub_key )
+		}
+		@$mol_mem
+		lord_selects() {
+			const roles = this.current_map()?.roles()
+
+			return roles?.get_rights()?.map( ( right ) => {
+				return this.LordRole( right.key() )
+			} ) ?? []
+		}
+		save_map_click( next?: any ) {
+			return $apxu_samosbor_map_app.save_map_click()
+		}
+		@$mol_mem_key
+		lord_role_value( pub_key: string, next?: typeof $apxu_samosbor_map_role.options[ number ] ): string {
+			const role = this.current_map()?.roles().lord_role( pub_key, next ) ?? "no_role"
+			console.log( role )
+			return role
+		}
+		@$mol_mem_key
+		lord_ref_value( pub_key: string ): string {
+			return $giper_baza_auth.from( pub_key ).pass().lord().toString()!
+		}
+		@$mol_mem_key
+		lord_description( pub_key: string, next?: string ): string {
+			return this.current_map()?.roles().lord_rights( pub_key )?.description( next ) ?? ""
+		}
 	}
 }

@@ -52,15 +52,8 @@ namespace $.$$ {
 		}
 		@$mol_mem
 		is_editor() {
-			const role = this.current_map()?.roles().lord_role( this.$.$hyoo_crus_auth.current().public().toString() )
+			const role = this.current_map()?.roles().lord_role( this.$.$giper_baza_auth.current().public().toString() )
 			return role === "cartographer" || role === "researcher" || this.is_admin() // TODO
-		}
-		@$mol_mem
-		role_controller_visible(): readonly ( any )[] {
-			if( this.is_admin() ) {
-				return [ this.RolesController() ]
-			}
-			return []
 		}
 		@$mol_mem
 		control_panel_visible(): readonly ( any )[] {
@@ -68,13 +61,9 @@ namespace $.$$ {
 		}
 		@$mol_mem
 		is_admin() {
-			return $apxu_samosbor_map_storage.global().ref() === this.$.$hyoo_crus_auth.current().lord()
+			return $apxu_samosbor_map_storage.global().link().toString() === this.$.$giper_baza_auth.current().pass().lord().toString()
 		}
-		@$mol_action
-		add_public_key( e?: any ) {
-			const pub_key = this.pub_key_value()
-			this.current_map()?.roles().add_key( pub_key )
-		}
+
 		// @$mol_mem
 		// lords() {
 		// 	const roles = Roles.global().get_roles()
@@ -84,30 +73,12 @@ namespace $.$$ {
 		// 	return lords
 		// }
 
-		@$mol_mem
-		lord_selects() {
-			const roles = this.current_map()?.roles()
 
-			return roles?.get_rights()?.map( ( right ) => {
-				return this.LordRole( right.key() )
-			} ) ?? []
-		}
 
-		@$mol_mem_key
-		lord_role_value( pub_key: string, next?: typeof $apxu_samosbor_map_role.options[ number ] ): string {
-			const role = this.current_map()?.roles().lord_role( pub_key, next ) ?? "no_role"
-			console.log( role )
-			return role
-		}
 
-		@$mol_mem_key
-		lord_ref_value( pub_key: string ): string {
-			return $hyoo_crus_auth.from( pub_key ).lord().description!
-		}
-		@$mol_mem_key
-		lord_description( pub_key: string, next?: string ): string {
-			return this.current_map()?.roles().lord_rights( pub_key )?.description( next ) ?? ""
-		}
+
+
+
 		// @$mol_mem_key
 		// lord_name( role: RoleInfo, next?: string ): string {
 		// 	return role.Name( null )?.val( next ) ?? ""
@@ -117,20 +88,20 @@ namespace $.$$ {
 		// 	return role.Key( null )?.val() ?? ""
 		// }
 		// @$mol_mem_key
-		// gift_rank( role: RoleInfo, next?: keyof typeof $hyoo_crus_rank_tier ): string {
-		// 	const role_rank = role.Rank( null )?.val( next ? BigInt( $hyoo_crus_rank_make( next, 'just' ) ) : undefined )
+		// gift_rank( role: RoleInfo, next?: keyof typeof $giper_baza_rank_tier ): string {
+		// 	const role_rank = role.Rank( null )?.val( next ? BigInt( $giper_baza_rank_make( next, 'just' ) ) : undefined )
 		// 	if( role_rank == null ) {
 		// 		return "post"
 		// 	}
 		// 	const rank = Number( role_rank )
 		// 	if( next ) {
 		// 	}
-		// 	return $hyoo_crus_rank_tier[ ( next ? $hyoo_crus_rank_make( next, 'just' ) : rank ) & 0b0_1111_0000 ]
+		// 	return $giper_baza_rank_tier[ ( next ? $giper_baza_rank_make( next, 'just' ) : rank ) & 0b0_1111_0000 ]
 		// }
 
 		@$mol_mem
 		public_key() {
-			return this.$.$hyoo_crus_auth.current().public().toString()
+			return this.$.$giper_baza_auth.current().public().toString()
 		}
 
 		@$mol_mem
@@ -139,18 +110,18 @@ namespace $.$$ {
 		}
 
 		@$mol_mem
-		selected_blocks( next?: symbol[] ) {
+		selected_blocks( next?: $giper_baza_link[] ) {
 			return next ?? []
 		}
 
 		@$mol_mem_key
-		block_selected( ref: symbol ) {
+		block_selected( ref: $giper_baza_link ) {
 			return this.selected_blocks().includes( ref )
 		}
 
 		@$mol_action
-		block_clicked( ref: symbol, event: any ) {
-			const ref_str = ref.description ?? ""
+		block_clicked( ref: $giper_baza_link, event: any ) {
+			const ref_str = ref.toString() ?? ""
 			console.log( ref_str, event )
 			const block = this.Block( ref )
 			const selected_blocks = this.selected_blocks()
@@ -185,7 +156,7 @@ namespace $.$$ {
 			return block.max_floor( next ) ?? 0
 		}
 		@$mol_action
-		close_click( ref: symbol, event?: any ) {
+		close_click( ref: $giper_baza_link, event?: any ) {
 			this.selected_blocks( [ ...this.selected_blocks().filter( ( r ) => r !== ref ) ] )
 		}
 		@$mol_mem_key
@@ -223,7 +194,7 @@ namespace $.$$ {
 		}
 		@$mol_action
 		delete_block() {
-			this.gigacluster()?.delete_block( this.selected_block()?.block_data().ref() )
+			this.gigacluster()?.delete_block( this.selected_block()?.block_data().link() )
 		}
 		@$mol_mem_key
 		selected_block_name( ref: symbol, next?: string ) {
@@ -233,7 +204,7 @@ namespace $.$$ {
 
 		@$mol_mem_key
 		static block( ref: any ) {
-			const block_node = $hyoo_crus_glob.Node( ref, $apxu_samosbor_map_block_data )
+			const block_node = $giper_baza_glob.Node( ref, $apxu_samosbor_map_block_data )
 			return block_node
 		}
 		@$mol_mem_key
@@ -245,7 +216,7 @@ namespace $.$$ {
 			const transitions: $mol_view[] = []
 			for( const block of this.current_map()?.blocks() ?? [] ) {
 				for( const transition of block.transitions() ?? [] ) {
-					const trans_view = this.Transition( transition.ref() )
+					const trans_view = this.Transition( transition.link() )
 					transitions.push( trans_view )
 				}
 			}
@@ -253,7 +224,7 @@ namespace $.$$ {
 		}
 		@$mol_mem_key
 		transition_direction( ref: any ): string {
-			const node = $hyoo_crus_glob.Node( ref, TransitionData )
+			const node = $giper_baza_glob.Node( ref, TransitionData )
 			const block_ref = node.From( null )?.Block( null )?.val()
 			const block = this.block( block_ref )
 			const absolute_direction = $apxu_samosbor_map_app.absolute_direction( block.direction(), node.From( null )?.Position( null )?.val()! )
@@ -265,7 +236,7 @@ namespace $.$$ {
 		}
 		@$mol_mem_key
 		transition_left( ref: any ): number {
-			const node = $hyoo_crus_glob.Node( ref, TransitionData )
+			const node = $giper_baza_glob.Node( ref, TransitionData )
 			const block_ref = node.From( null )?.Block( null )?.val()
 			const block = this.block( block_ref )
 			const offset = $apxu_samosbor_map_app.getOffset( node.From( null )?.Position( null )?.val()!, block.direction() )
@@ -274,7 +245,7 @@ namespace $.$$ {
 		}
 		@$mol_mem_key
 		transition_top( ref: any ): number {
-			const node = $hyoo_crus_glob.Node( ref, TransitionData )
+			const node = $giper_baza_glob.Node( ref, TransitionData )
 			const block_ref = node.From( null )?.Block( null )?.val()
 			const block = this.block( block_ref )
 			const offset = $apxu_samosbor_map_app.getOffset( node.From( null )?.Position( null )?.val()!, block.direction() )
@@ -405,7 +376,7 @@ namespace $.$$ {
 			const blocks: $.$apxu_samosbor_map_block[] = []
 			const block_nodes = this.current_map()?.blocks() ?? []
 			for( const block_data of block_nodes ) {
-				const block_view = this.Block( block_data.land_ref() )
+				const block_view = this.Block( block_data.land_link() )
 				blocks.push( block_view )
 			}
 			return blocks
@@ -429,7 +400,7 @@ namespace $.$$ {
 		concentrated_block() {
 			const block_ref = $mol_state_arg.value( "block" )
 			if( !block_ref ) return
-			const block_data = this.block( $hyoo_crus_ref( block_ref ) )
+			const block_data = this.block( new $giper_baza_link( block_ref ) )
 			this.zoom_to_block( block_data )
 		}
 
@@ -443,7 +414,7 @@ namespace $.$$ {
 			const area = this.Area()
 			const canvas = this.Canvas()
 			const canvas_rect = canvas.dom_node().getBoundingClientRect()
-			const block_view = this.Block( block.ref() )
+			const block_view = this.Block( block.link() )
 			const get_block_rect = ( block: $apxu_samosbor_map_block_data, scale: number ) => {
 				const block_direction = block.direction()
 				const normal_width = 720 * scale
@@ -472,7 +443,7 @@ namespace $.$$ {
 			const block = this.current_map()?.blocks()?.find( ( block ) => { return block.name().toLowerCase().includes( search_value ) } )
 			if( !block ) return
 			this.current_layer( block.layer() )
-			this.selected_blocks( [ ...this.selected_blocks(), block.ref() ] )
+			this.selected_blocks( [ ...this.selected_blocks(), block.link() ] )
 			this.canvas_zoom( 0.5 )
 			this.zoom_to_block( block )
 		}
@@ -481,7 +452,7 @@ namespace $.$$ {
 		search_item_click( item: { location: { block: $apxu_samosbor_map_block_data, floor?: number } } ) {
 			console.log( item )
 			const block = item.location.block
-			this.selected_blocks( [ block.ref() ] )
+			this.selected_blocks( [ block.link() ] )
 			this.canvas_zoom( 0.5 )
 			this.zoom_to_block( block )
 			const floor = item.location.floor
@@ -497,9 +468,7 @@ namespace $.$$ {
 			}
 		}
 
-		save_map_click( next?: any ) {
-			return $apxu_samosbor_map_app.save_map_click()
-		}
+
 
 		static async save_map_click() {
 			const map = $apxu_samosbor_map_storage.current()

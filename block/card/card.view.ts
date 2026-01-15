@@ -200,7 +200,7 @@ namespace $.$$ {
 		@$mol_action
 		delete_block( next?: any ) {
 			const data = this.block().block_data()
-			this.gigacluster().delete_block( data.ref() )
+			this.gigacluster().delete_block( data.link() )
 		}
 
 		@$mol_mem
@@ -309,7 +309,7 @@ namespace $.$$ {
 		@$mol_mem_key
 		remove_floor( node: ProfessionData ) {
 			const data: $apxu_samosbor_map_block_data = this.block().block_data()
-			data.remove_profession( node.ref() )
+			data.remove_profession( node.link() )
 		}
 		@$mol_mem
 		safe_floors() {
@@ -330,7 +330,7 @@ namespace $.$$ {
 		@$mol_action
 		remove_place( node: PlaceData ) {
 			const data: $apxu_samosbor_map_block_data = this.block().block_data()
-			data.remove_place( node.ref() )
+			data.remove_place( node.link() )
 		}
 		@$mol_mem
 		rotation(): string {
@@ -527,7 +527,7 @@ namespace $.$$ {
 		@$mol_mem
 		block_link(): string {
 			const link = $mol_state_arg.make_link( {
-				block: this.block().block_data().ref().description!,
+				block: this.block().block_data().link().toString(),
 				layer: this.block().current_layer().toString()
 			} )
 			return link

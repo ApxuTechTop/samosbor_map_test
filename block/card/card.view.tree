@@ -379,5 +379,5 @@ $apxu_samosbor_map_block_card $mol_view
 								<= remove_transition_button* $mol_button_minor
 									sub / <= remove_transition_icon* $mol_icon_close
 									click? <=> remove_transition*? null
-				^ rights_visible / <= rights $hyoo_crus_land_rights
-					land <= block_land $hyoo_crus_land
+				^ rights_visible / <= rights $giper_baza_land_rights
+					land <= block_land $giper_baza_land
