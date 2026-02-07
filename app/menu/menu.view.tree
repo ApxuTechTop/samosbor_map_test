@@ -83,6 +83,35 @@ $apxu_samosbor_map_app_menu $mol_view
 						<= RoutingBlock $apxu_samosbor_map_app_menu_routingblock
 				<= Footer $mol_view
 					sub /
+						^ role_controller_visible / <= RolesController $mol_expander
+							label / \Роли
+							content /
+								- <= Right $giper_baza_land_rights
+									land <= gigacluster_land null
+								<= key_input $mol_bar
+									sub /
+										<= pub_key_string $mol_string
+											value? <=> pub_key_value? \
+										<= submit_key $mol_button_minor
+											click? <=> add_public_key? null
+											sub / <= sumbit_icon $mol_icon_plus
+								<= LordsList $mol_list
+									rows /
+										^ lord_selects /
+											<= LordRole*0 $mol_bar
+												sub /
+													<= lord_name* $mol_string
+														hint <= lord_ref_value* \
+														value? <=> lord_description*? \
+													<= lord_ref_copy* $mol_button_copy
+														text <= lord_ref_value* \
+													<= role_select* $mol_select
+														value? <=> lord_role_value*? \traveler
+														dictionary *
+															no_role \Нет роли
+															cartographer \Картограф
+															researcher \Исследователь
+															traveler \Путник
 						^ save_map_visible <= save_map_elements / 
 							<= save_map_button $mol_button_major
 								click? <=> save_map null
@@ -95,8 +124,8 @@ $apxu_samosbor_map_app_menu $mol_view
 								sub / \Загрузить карту
 							<= map_text $mol_view
 								sub / <= map_json_text /
-						^ rights_visible / <= Rights $hyoo_crus_land_rights
-							land <= land $hyoo_crus_land
+						^ rights_visible / <= Rights $giper_baza_land_rights
+							land <= land $giper_baza_land
 						<= OtherButtons $mol_bar
 							sub /
 								<= FunctionalButtons $mol_view

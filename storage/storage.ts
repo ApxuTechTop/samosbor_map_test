@@ -1,6 +1,6 @@
 namespace $ {
 
-	const use_giper_baza: false = false as const
+	const use_giper_baza: true = true as const
 	type DeepObject = {
 		[ key: string ]: unknown | DeepObject
 	}
@@ -89,15 +89,16 @@ namespace $ {
 
 	}
 
-	export class $apxu_samosbor_map_storage extends $hyoo_crus_home.with( {
-		Maps: $hyoo_crus_list_ref_to( () => $apxu_samosbor_map )
+	export class $apxu_samosbor_map_storage extends $giper_baza_dict.with( {
+		Maps: $giper_baza_list_link_to( () => $apxu_samosbor_map )
 	} ) {
 		@$mol_mem
 		static global() {
 			const storage_ref = $apxu_samosbor_map_app_storage_ref()
 			//const storage_ref = null
-			const storage = storage_ref ? $hyoo_crus_glob.Node( $hyoo_crus_ref( storage_ref ), $apxu_samosbor_map_storage ) : $hyoo_crus_glob.home( $apxu_samosbor_map_storage )
-			console.log( "STORAGE REF: ", storage.ref() )
+			const storage = storage_ref ? $giper_baza_glob.Pawn( new $giper_baza_link( storage_ref ), $apxu_samosbor_map_storage ) : $giper_baza_glob.Land( this.$.$giper_baza_auth.current().pass().lord() ).Data( $apxu_samosbor_map_storage )
+			//const storage = $giper_baza_glob.home( $apxu_samosbor_map_storage )
+			console.log( "STORAGE REF: ", storage.link() )
 			// TODO
 			return storage
 		}
@@ -111,7 +112,7 @@ namespace $ {
 			const maps_field = this.global().Maps( true )
 			// вот тут надо дождаться загрузки
 			const maps = maps_field?.remote_list() ?? []
-			const map = maps[ current_id ] ? maps[ current_id ] : maps_field?.make( { '': $hyoo_crus_rank_read } )
+			const map = maps[ current_id ] ? maps[ current_id ] : maps_field?.make( [ [ null, $giper_baza_rank_read ] ] )
 			return map
 		}
 
@@ -142,35 +143,35 @@ namespace $ {
 			}
 
 			const prototype = Object.getPrototypeOf( object )
-			if( prototype instanceof $hyoo_crus_dict && ( object as any ).Value ) {
+			if( prototype instanceof $giper_baza_dict && ( object as any ).Value ) {
 				const saved_data = await this.save_dict( object, saved_refs )
 				return saved_data
 			}
-			if( prototype instanceof $hyoo_crus_dict ) {
+			if( prototype instanceof $giper_baza_dict ) {
 				const saved_data = await this.save_struct( object, saved_refs )
 				return saved_data
 			}
-			if( prototype instanceof $hyoo_crus_list_ref_base ) {
+			if( prototype instanceof $giper_baza_list_link_base ) {
 				return await this.save_list( object, saved_refs )
 			}
-			if( prototype instanceof $hyoo_crus_atom_ref_base ) {
+			if( prototype instanceof $giper_baza_atom_link_base ) {
 				const saved_data = await this.save_ref( object, saved_refs )
 				return saved_data
 			}
-			if( object instanceof $hyoo_crus_atom_int ) {
+			if( object instanceof $giper_baza_atom_bint ) {
 				const big_value = await object.val()
 				const val = ( big_value != undefined ) ? Number( big_value ) : big_value
 				return val
 			}
-			if( object instanceof $hyoo_crus_atom_bool ) {
+			if( object instanceof $giper_baza_atom_bool ) {
 				const val = await object.val()
 				return val
 			}
-			if( object instanceof $hyoo_crus_atom_str ) {
+			if( object instanceof $giper_baza_atom_text ) {
 				const val = await object.val()
 				return val
 			}
-			if( object instanceof $hyoo_crus_atom_enum_base ) {
+			if( object instanceof $giper_baza_atom_enum_base ) {
 				const val = await this.save_enum( object as any, saved_refs )
 				return val
 			}
@@ -246,15 +247,16 @@ namespace $ {
 			const link = ref as $giper_baza_link
 			return use_giper_baza ? link.toString() : r?.description
 		}
-		static get_object_ref( object: $hyoo_crus_node ): $hyoo_crus_ref
+		// static get_object_ref( object: $hyoo_crus_node ): $hyoo_crus_ref
 		// static get_object_ref(object: $giper_baza_node): $giper_baza_link;
-		static get_object_ref( object: $hyoo_crus_node | $giper_baza_pawn ): $giper_baza_link | $hyoo_crus_ref {
+		static get_object_ref( object: $hyoo_crus_node | $giper_baza_pawn ): $giper_baza_link {
 			const crus_object = object as $hyoo_crus_node
 			const giper_object = object as $giper_baza_pawn
+			return giper_object.link()
 			if( use_giper_baza ) {
-				return giper_object.link()
+				
 			} else {
-				return crus_object.ref()
+				// return crus_object.ref()
 			}
 		}
 
@@ -408,7 +410,7 @@ namespace $ {
 
 		static async load_map( map: $apxu_samosbor_map, result: { Gigacluster: { Blocks: string[] } }, saved_block_nodes: ( NonNullable<ReturnType<typeof $apxu_samosbor_map_storage.save_map>> )[ "saved_block_nodes" ], saved_transition_nodes: ( NonNullable<ReturnType<typeof $apxu_samosbor_map_storage.save_map>> )[ "saved_transition_nodes" ] ) {
 			const get_read_preset = () => {
-				return { '': $hyoo_crus_rank_read }
+				return [[null, $giper_baza_rank_read]] as $giper_baza_rank_preset
 			}
 			const Gigacluster = await $mol_wire_async( map ).Gigacluster( true )
 			if( !Gigacluster ) return

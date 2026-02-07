@@ -51,7 +51,7 @@ namespace $.$$ {
 			return this.is_interfloor() ? this.InterFloor() : null
 		}
 	}
-	type ConnectionPort = { block_ref: $hyoo_crus_ref, floor: number, position: TransitionPosition }
+	type ConnectionPort = { block_ref: $giper_baza_link, floor: number, position: TransitionPosition }
 	export class $apxu_samosbor_map_block extends $.$apxu_samosbor_map_block {
 		// @$mol_mem
 		// block_name(next?: string) {
@@ -233,7 +233,7 @@ namespace $.$$ {
 			for( const transition of this.block_data().transitions() ?? [] ) {
 				const from_block_ref = transition.from_block_ref()
 				if( !from_block_ref ) continue
-				if( this.block_data().ref() === from_block_ref ) {
+				if( this.block_data().link() === from_block_ref ) {
 					transition_views.push( this.Transition( transition ) )
 				}
 			}
@@ -310,7 +310,7 @@ namespace $.$$ {
 			if( !( this.create_block_mode() || this.connect_mode() ) ) {
 				return true
 			}
-			const port: ConnectionPort = { block_ref: this.block_data().ref(), floor: this.current_floor(), position }
+			const port: ConnectionPort = { block_ref: this.block_data().link(), floor: this.current_floor(), position }
 			const first_port = $apxu_samosbor_map_block.first_port()
 			if( ( first_port && $apxu_samosbor_map_block.is_same_ports( first_port, port ) || this.hovered() ) ) {
 				const floor = this.current_floor()
@@ -368,7 +368,7 @@ namespace $.$$ {
 		}
 
 		static is_same_ports( port1: ConnectionPort, port2: ConnectionPort ) {
-			return port1.block_ref.description === port2.block_ref.description
+			return port1.block_ref.toString() === port2.block_ref.toString()
 				&& port1.floor === port2.floor
 				&& port1.position === port2.position
 		}
@@ -377,7 +377,7 @@ namespace $.$$ {
 		select_connection( position: TransitionPosition ) {
 			const first_port = $apxu_samosbor_map_block.first_port()
 			const is_same_port = ( port: ConnectionPort ) => {
-				return $apxu_samosbor_map_block.is_same_ports( port, { block_ref: this.block_data().ref(), floor: this.current_floor(), position } )
+				return $apxu_samosbor_map_block.is_same_ports( port, { block_ref: this.block_data().link(), floor: this.current_floor(), position } )
 				//return port.block_ref.description == this.block_data().ref().description && port.floor == this.current_floor() && port.position == position
 			}
 			// если кликнули по тому же соединению, убрать first_port
@@ -386,11 +386,11 @@ namespace $.$$ {
 				return
 			}
 			// если кликнули по тому же блоку, то ничего не делаем
-			if( this.block_data().ref() === first_port?.block_ref ) return
+			if( this.block_data().link() === first_port?.block_ref ) return
 
 			// если нет first_port добавить в first_port
 			if( !first_port ) {
-				$apxu_samosbor_map_block.first_port( { block_ref: this.block_data().ref(), floor: this.current_floor(), position: position } )
+				$apxu_samosbor_map_block.first_port( { block_ref: this.block_data().link(), floor: this.current_floor(), position: position } )
 				return
 			}
 
@@ -404,7 +404,7 @@ namespace $.$$ {
 			console.log( "first port: ", first_port )
 			if( !first_port ) return
 
-			const first_block = $hyoo_crus_glob.Node( first_port.block_ref, $apxu_samosbor_map_block_data )
+			const first_block = $giper_baza_glob.Pawn( first_port.block_ref, $apxu_samosbor_map_block_data )
 			const transition = this.block_data().transition_by_position( this.current_floor(), position )
 
 
@@ -416,7 +416,7 @@ namespace $.$$ {
 				transition.remove_transition()
 			} else {
 				// соединить блоки
-				const another_block = $hyoo_crus_glob.Node( first_port.block_ref, $apxu_samosbor_map_block_data )
+				const another_block = $giper_baza_glob.Pawn( first_port.block_ref, $apxu_samosbor_map_block_data )
 				const another_floor = first_port.floor
 				const another_position = first_port.position
 				this.block_data().connect( this.current_floor(), position, another_block, another_floor, another_position )
@@ -431,7 +431,7 @@ namespace $.$$ {
 			}
 			const first_port = $apxu_samosbor_map_block.first_port()
 			if( !first_port ) { return false }
-			const current_block = this.block_data().ref()
+			const current_block = this.block_data().link()
 			const current_floor = this.current_floor()
 			const current_position = position
 			const is_same_port = ( { block_ref, floor, position }: typeof first_port ) => {
@@ -446,11 +446,11 @@ namespace $.$$ {
 				return true
 			}
 
-			const first_block = $hyoo_crus_glob.Node( first_port.block_ref, $apxu_samosbor_map_block_data )
+			const first_block = $giper_baza_glob.Pawn( first_port.block_ref, $apxu_samosbor_map_block_data )
 			// выделяем если нашли transition
 			const transition = first_block.transition_by_position( first_port.floor, first_port.position )
 
-			const current_port = ( transition?.From( null )?.Block( null )?.val() === first_block.ref() ) ? transition.To( null ) : transition?.From( null )
+			const current_port = ( transition?.From()?.Block()?.val() === first_block.link() ) ? transition.To( null ) : transition?.From( null )
 			if( !current_port ) {
 				return false
 			}

@@ -8,11 +8,11 @@ namespace $ {
 	export type TransitionPosition = "up_left" | "up_middle" | "up_right" | "right" | "down_right" | "down_middle" | "down_left" | "left"
 	export const TransitionPositions: TransitionPosition[] = [ "up_left", "up_middle", "up_right", "right", "down_right", "down_middle", "down_left", "left" ]
 
-	export class BlockDirection extends $hyoo_crus_atom_enum( [ "up", "right", "down", "left" ] ) {}
-	export class TransitionPositionData extends $hyoo_crus_atom_enum( TransitionPositions ) {}
-	export class TransitionPort extends $hyoo_crus_dict.with( {
-		Block: $hyoo_crus_atom_ref_to( () => $apxu_samosbor_map_block_data ),
-		Floor: $hyoo_crus_atom_int,
+	export class BlockDirection extends $giper_baza_atom_enum( [ "up", "right", "down", "left" ] ) {}
+	export class TransitionPositionData extends $giper_baza_atom_enum( TransitionPositions ) {}
+	export class TransitionPort extends $giper_baza_dict.with( {
+		Block: $giper_baza_atom_link_to( () => $apxu_samosbor_map_block_data ),
+		Floor: $giper_baza_atom_bint,
 		Position: TransitionPositionData,
 	} ) {
 
@@ -20,7 +20,7 @@ namespace $ {
 			return this.Floor( null )?.val() === BigInt( floor ) && this.Position( null )?.val() === position
 		}
 	}
-	export class TransitionData extends $hyoo_crus_dict.with( {
+	export class TransitionData extends $giper_baza_dict.with( {
 		From: TransitionPort,
 		To: TransitionPort
 	} ) {
@@ -44,21 +44,21 @@ namespace $ {
 			const from_block = from_block_ref && this.$.$apxu_samosbor_map_app.block( from_block_ref )
 			const to_block_ref = this.To( null )?.Block( null )?.val()
 			const to_block = to_block_ref && this.$.$apxu_samosbor_map_app.block( to_block_ref )
-			to_block?.Transitions( null )?.cut( this.ref() )
-			from_block?.Transitions( null )?.cut( this.ref() )
+			to_block?.Transitions( null )?.cut( this.link() )
+			from_block?.Transitions( null )?.cut( this.link() )
 		}
 	}
 
-	export class FlightType extends $hyoo_crus_atom_enum( [ "stairs", "elevator", "ladder_elevator" ] ) {}
-	export class FlightStatus extends $hyoo_crus_atom_enum( [ "free", "blocked" ] ) {}
-	export class FlightData extends $hyoo_crus_dict.with( {
+	export class FlightType extends $giper_baza_atom_enum( [ "stairs", "elevator", "ladder_elevator" ] ) {}
+	export class FlightStatus extends $giper_baza_atom_enum( [ "free", "blocked" ] ) {}
+	export class FlightData extends $giper_baza_dict.with( {
 		Type: FlightType,
 		Status: FlightStatus,
 	} ) {}
 
-	export class PassageType extends $hyoo_crus_atom_enum( [ "noway", "normal", "stairs_up", "stairs_down" ] ) {}
-	export class PassageStatus extends $hyoo_crus_atom_enum( [ "free", "blocked", "danger" ] ) {}
-	export class PassageData extends $hyoo_crus_dict.with( {
+	export class PassageType extends $giper_baza_atom_enum( [ "noway", "normal", "stairs_up", "stairs_down" ] ) {}
+	export class PassageStatus extends $giper_baza_atom_enum( [ "free", "blocked", "danger" ] ) {}
+	export class PassageData extends $giper_baza_dict.with( {
 		Type: PassageType,
 		Status: PassageStatus,
 	} ) {}
@@ -74,15 +74,15 @@ namespace $ {
 		DownRightPassage: PassageData,
 	} as const
 	const FenceTypes = [ "missing", "hole", "solid" ] as const
-	export class FenceData extends $hyoo_crus_atom_enum( FenceTypes ) {}
+	export class FenceData extends $giper_baza_atom_enum( FenceTypes ) {}
 	export const FloorDataScheme = {
 		...PassageDirections,
 		Fence: FenceData,
 		LeftFlight: FlightStatus,
 		RightFlight: FlightStatus,
-		IsDouble: $hyoo_crus_atom_bool,
+		IsDouble: $giper_baza_atom_bool,
 	} as const
-	export class FloorData extends $hyoo_crus_dict.with( FloorDataScheme ) {
+	export class FloorData extends $giper_baza_dict.with( FloorDataScheme ) {
 		static readonly positions_map: { [ pos in TransitionPosition ]: keyof typeof PassageDirections } = {
 			up_left: "UpLeftPassage",
 			up_middle: "UpMiddlePassage",
@@ -165,14 +165,14 @@ namespace $ {
 
 	}
 
-	export class FloorsData extends $hyoo_crus_dict_to( FloorData ) {}
+	export class FloorsData extends $giper_baza_dict_to( FloorData ) {}
 
-	export class BlockType extends $hyoo_crus_atom_enum( [ "residential", "frozen", "infected", "destroyed" ] ) {}
+	export class BlockType extends $giper_baza_atom_enum( [ "residential", "frozen", "infected", "destroyed" ] ) {}
 
-	export class ProfessionType extends $hyoo_crus_atom_enum( [ "liquidator", "repairman", "cleaner", "plumber" ] ) {}
-	export class ProfessionData extends $hyoo_crus_dict.with( {
+	export class ProfessionType extends $giper_baza_atom_enum( [ "liquidator", "repairman", "cleaner", "plumber" ] ) {}
+	export class ProfessionData extends $giper_baza_dict.with( {
 		Type: ProfessionType,
-		Floor: $hyoo_crus_atom_int,
+		Floor: $giper_baza_atom_bint,
 	} ) {
 		floor( next?: number ) {
 			const val = this.Floor( next )?.val( next != undefined ? BigInt( next ) : next )
@@ -180,46 +180,46 @@ namespace $ {
 		}
 	}
 
-	export class PlaceType extends $hyoo_crus_atom_enum( [
+	export class PlaceType extends $giper_baza_atom_enum( [
 		"theatre", "hospital", "party", "gym",
 		"laundry", "postal", "overview", "racing", "hockey",
 		"spleef", "pool", "warehouse", "shower", "toilet", "gallery"
 	] ) {}
-	export class PlaceData extends $hyoo_crus_dict.with( {
+	export class PlaceData extends $giper_baza_dict.with( {
 		Type: PlaceType,
-		Floor: $hyoo_crus_atom_int,
+		Floor: $giper_baza_atom_bint,
 	} ) {}
 	// $apxu_samosbor_map_app_researcher.use()
 
-	export class $apxu_samosbor_map_block_data extends ( $hyoo_crus_entity.with( {
-		IsPipe: $hyoo_crus_atom_bool,
+	export class $apxu_samosbor_map_block_data extends ( $giper_baza_entity.with( {
+		IsPipe: $giper_baza_atom_bool,
 
-		Name: $hyoo_crus_atom_str,
+		Name: $giper_baza_atom_text,
 		Direction: BlockDirection,
 		Type: BlockType,
-		Transitions: $hyoo_crus_list_ref_to( () => TransitionData ),
-		PositionX: $hyoo_crus_atom_int,
-		PositionY: $hyoo_crus_atom_int,
-		Layer: $hyoo_crus_atom_int,
-		Generator: $hyoo_crus_atom_int,
-		BoardFloor: $hyoo_crus_atom_int,
-		MailFloor: $hyoo_crus_atom_int,
-		RoofFloor: $hyoo_crus_atom_int,
-		FloodFloor: $hyoo_crus_atom_int,
-		MinFloor: $hyoo_crus_atom_int,
-		MaxFloor: $hyoo_crus_atom_int,
+		Transitions: $giper_baza_list_link_to( () => TransitionData ),
+		PositionX: $giper_baza_atom_bint,
+		PositionY: $giper_baza_atom_bint,
+		Layer: $giper_baza_atom_bint,
+		Generator: $giper_baza_atom_bint,
+		BoardFloor: $giper_baza_atom_bint,
+		MailFloor: $giper_baza_atom_bint,
+		RoofFloor: $giper_baza_atom_bint,
+		FloodFloor: $giper_baza_atom_bint,
+		MinFloor: $giper_baza_atom_bint,
+		MaxFloor: $giper_baza_atom_bint,
 		LeftFlight: FlightData,
 		RightFlight: FlightData,
 		FloorsData: FloorsData,
-		IsMiddleFlight: $hyoo_crus_atom_bool,
+		IsMiddleFlight: $giper_baza_atom_bool,
 		MiddleFlight: FlightData,
-		HasBalcony: $hyoo_crus_atom_bool,
+		HasBalcony: $giper_baza_atom_bool,
 
-		Professions: $hyoo_crus_list_ref_to( () => ProfessionData ),
-		Places: $hyoo_crus_list_ref_to( () => PlaceData ),
+		Professions: $giper_baza_list_link_to( () => ProfessionData ),
+		Places: $giper_baza_list_link_to( () => PlaceData ),
 
-		CanCreateBlock: $hyoo_crus_atom_bool,
-		Description: $hyoo_crus_text,
+		CanCreateBlock: $giper_baza_atom_bool,
+		Description: $giper_baza_text,
 
 	} ) ) {
 		@$mol_mem
@@ -241,7 +241,7 @@ namespace $ {
 
 		transition_by_position( floor: number, position: TransitionPosition ) {
 			return this.transitions()?.find( ( transition ) => {
-				return ( transition.From( null )?.Block( null )?.val() === this.ref() && transition.From( null )?.is_correct( floor, position ) ) || transition.To( null )?.Block( null )?.val() === this.ref() && transition.To( null )?.is_correct( floor, position )
+				return ( transition.From( null )?.Block( null )?.val() === this.link() && transition.From( null )?.is_correct( floor, position ) ) || transition.To( null )?.Block( null )?.val() === this.link() && transition.To( null )?.is_correct( floor, position )
 			} )
 		}
 
@@ -255,13 +255,13 @@ namespace $ {
 			const trans = this.Transitions( null )?.make( this.land() )
 
 			if( !trans ) return
-			block_node.Transitions( null )?.add( trans.ref() )
+			block_node.Transitions( null )?.add( trans.link() )
 			trans.From( null )?.Floor( null )?.val( BigInt( my_floor ) )
 			trans.From( null )?.Position( null )?.val( my_pos )
-			trans.From( null )?.Block( null )?.val( this.ref() )
+			trans.From( null )?.Block( null )?.val( this.link() )
 			trans.To( null )?.Floor( null )?.val( BigInt( another_floor ) )
 			trans.To( null )?.Position( null )?.val( another_pos )
-			trans.To( null )?.Block( null )?.val( block_node.ref() )
+			trans.To( null )?.Block( null )?.val( block_node.link() )
 		}
 		@$mol_action
 		remove_transition( transition: TransitionData ) {
@@ -385,7 +385,7 @@ namespace $ {
 		}
 
 		@$mol_action
-		remove_profession( node: $hyoo_crus_vary_type ) {
+		remove_profession( node: $giper_baza_vary_type ) {
 			this.Professions( true )?.cut( node )
 		}
 
@@ -422,7 +422,7 @@ namespace $ {
 			return node
 		}
 		@$mol_action
-		remove_place( node: $hyoo_crus_vary_type ) {
+		remove_place( node: $giper_baza_vary_type ) {
 			this.Places( true )?.cut( node )
 		}
 

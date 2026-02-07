@@ -2,22 +2,22 @@ namespace $ {
 
 
 
-	export function bigint_to_rank( val: bigint | undefined | null, def?: typeof $hyoo_crus_rank.Value ): typeof $hyoo_crus_rank.Value {
+	export function bigint_to_rank( val: bigint | undefined | null, def?: typeof $giper_baza_rank.Value ): typeof $giper_baza_rank.Value {
 		if( val == null ) {
 			return def!
 		}
 		const num = Number( val )
-		return num as typeof $hyoo_crus_rank.Value
+		return num as typeof $giper_baza_rank.Value
 	}
-	export function rank_to_bigint( rank: typeof $hyoo_crus_rank.Value ) {
+	export function rank_to_bigint( rank: typeof $giper_baza_rank.Value ) {
 		return BigInt( rank )
 	}
 
-	export class $apxu_samosbor_map_role extends $hyoo_crus_atom_enum( [ "cartographer", "researcher", "traveler" ] ) {}
+	export class $apxu_samosbor_map_role extends $giper_baza_atom_enum( [ "cartographer", "researcher", "traveler" ] ) {}
 
-	export class $apxu_samosbor_map_role_right extends $hyoo_crus_dict.with( {
-		Key: $hyoo_crus_atom_str,
-		Description: $hyoo_crus_atom_str,
+	export class $apxu_samosbor_map_role_right extends $giper_baza_dict.with( {
+		Key: $giper_baza_atom_text,
+		Description: $giper_baza_atom_text,
 		Role: $apxu_samosbor_map_role,
 	} ) {
 		@$mol_mem
@@ -34,10 +34,10 @@ namespace $ {
 		}
 	}
 
-	// export class $apxu_samosbor_map_role extends $hyoo_crus_dict.with({
-	// 	Rights: $hyoo_crus_dict_to($apxu_samosbor_map_role_right),
-	// 	Default: $hyoo_crus_atom_int,
-	// 	Ruler: $hyoo_crus_atom_str,
+	// export class $apxu_samosbor_map_role extends $giper_baza_dict.with({
+	// 	Rights: $giper_baza_dict_to($apxu_samosbor_map_role_right),
+	// 	Default: $giper_baza_atom_int,
+	// 	Ruler: $giper_baza_atom_str,
 	// }) {
 	// 	@$mol_mem
 	// 	public_keys(next?: string[]) {
@@ -53,10 +53,10 @@ namespace $ {
 	// 	// }
 	// 	@$mol_mem
 	// 	rank() {
-	// 		return $hyoo_crus_rank_join( "just" ) // TODO
+	// 		return $giper_baza_rank_join( "just" ) // TODO
 	// 	}
 	// 	// @$mol_mem_key
-	// 	// rank(key: string, next?: typeof $hyoo_crus_rank.Value) {
+	// 	// rank(key: string, next?: typeof $giper_baza_rank.Value) {
 	// 	// 	return bigint_to_rank(this.Rights(true)!.key(key)?.Rank(true)?.val(next && rank_to_bigint(next)), this.default_rank())
 	// 	// }
 	// 	@$mol_mem
@@ -64,21 +64,21 @@ namespace $ {
 	// 		return "my_key" // TODO
 	// 	}
 	// 	@$mol_mem
-	// 	preset(ignore?: $hyoo_crus_auth) {
-	// 		const mapped_ranks = (this.public_keys().reduce((acc: {[key: string]: typeof $hyoo_crus_rank.Value}, key) => {
+	// 	preset(ignore?: $giper_baza_auth) {
+	// 		const mapped_ranks = (this.public_keys().reduce((acc: {[key: string]: typeof $giper_baza_rank.Value}, key) => {
 	// 			acc[key as string] = this.rank()
 	// 			return acc
 	// 		}, {}))
 	// 		return {
-	// 			[this.ruler_key()]: $hyoo_crus_rank_rule,
+	// 			[this.ruler_key()]: $giper_baza_rank_rule,
 
 	// 		}
 	// 	}
 	// }
 
-	export class $apxu_samosbor_map_role_infos extends $hyoo_crus_dict.with( {
-		Rights: $hyoo_crus_list_ref_to( () => $apxu_samosbor_map_role_right ),
-		Ruler: $hyoo_crus_atom_str,
+	export class $apxu_samosbor_map_role_infos extends $giper_baza_dict.with( {
+		Rights: $giper_baza_list_link_to( () => $apxu_samosbor_map_role_right ),
+		Ruler: $giper_baza_atom_text,
 	} ) {
 		@$mol_mem
 		get_rights() {
@@ -90,7 +90,7 @@ namespace $ {
 		}
 		@$mol_action
 		add_key( key: string ) {
-			const new_rights = this.Rights( true )?.make( { '': $hyoo_crus_rank_read } )
+			const new_rights = this.Rights( true )?.make( [ [ null, $giper_baza_rank_read ] ] )
 			new_rights?.key( key )
 			new_rights?.role( "researcher" )
 
@@ -106,7 +106,7 @@ namespace $ {
 			const finded = this.lord_rights( key )
 			if( next === "no_role" ) {
 				if( finded ) {
-					this.Rights( true )?.cut( finded.ref() )
+					this.Rights( true )?.cut( finded.link() )
 				}
 
 				return "no_role"
@@ -116,33 +116,35 @@ namespace $ {
 
 		rank_for_role( current_role: typeof $apxu_samosbor_map_role.options[ number ] | "no_role", needed_role: typeof $apxu_samosbor_map_role.options[ number ] ) {
 			if( needed_role === "traveler" ) {
-				return $hyoo_crus_rank_join( "just" )
+				return $giper_baza_rank_read
 			}
 			if( current_role === needed_role ) {
-				return $hyoo_crus_rank_post( "just" )
+				return $giper_baza_rank_post( "just" )
 			}
 			if( current_role === "cartographer" && needed_role === "researcher" ) {
-				return $hyoo_crus_rank_post( "just" )
+				return $giper_baza_rank_post( "just" )
 			}
-			return $hyoo_crus_rank_join( "just" )
+			return $giper_baza_rank_read
 		}
 
 		@$mol_mem_key
 		preset( role: typeof $apxu_samosbor_map_role.options[ number ] ) {
 			const all_rights = this.get_rights()
-			const preset: { [ key: string ]: typeof $hyoo_crus_rank.Value } = {}
+			const preset: $giper_baza_rank_preset = []
 			for( const right of all_rights ?? [] ) {
-				preset[ right.key() ] = this.rank_for_role( right.role(), role )
+				preset.push( [ $giper_baza_auth_pass.from( right.key() ), this.rank_for_role( right.role(), role ) ] )
 			}
 			console.log( "RULER KEY", this.ruler_key() )
-			preset[ this.ruler_key() ] = $hyoo_crus_rank_rule
+			const ruler_pass = $giper_baza_auth_pass.from( this.ruler_key() )
+			preset.push( [ ruler_pass, $giper_baza_rank_rule ] )
 			return preset
 		}
 		@$mol_mem_key
 		preset_no_current( role: typeof $apxu_samosbor_map_role.options[ number ] ) {
-			const preset = { ...this.preset( role ) }
-			delete preset[ $hyoo_crus_auth.current().public().toString() ]
-			return preset
+			const current_key = $giper_baza_auth.current().public().toString()
+			return this.preset( role ).filter( ( [ pass ] ) => {
+				return pass?.toString() !== current_key
+			} )
 		}
 	}
 }
