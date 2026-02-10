@@ -25,7 +25,7 @@ $apxu_samosbor_map_app_menu_searchbar $mol_bar
 
 $apxu_samosbor_map_app_menu_routingblock $mol_view
 	sub /
-		\Искать места рядом
+		- \Искать места рядом
 		<= block_types $mol_bar
 		<= professions $mol_bar
 		<= block_effects $mol_bar
@@ -144,6 +144,12 @@ $apxu_samosbor_map_app_menu $mol_view
 												view_box \0 0 22 24
 								<= Links $mol_view
 									sub /
+										<= donation_button $apxu_samosbor_map_app_menu_button sub / <= DonationAlerts $mol_link
+											hint \На развитие карты
+											uri \https://www.donationalerts.com/r/apxutechtop
+											sub / <= donation_icon $mol_icon
+												path \M27.525 0c.528 0 1.03.23 1.373.63l7.668 8.919c.315.367.47.844.427 1.325l-1.157 13.184c-.037.432-.229.835-.54 1.137l-9.464 9.155a1.81 1.81 0 0 1-1.26.507H14.5L5.63 43l.687-8.149h-4.51a1.81 1.81 0 0 1-1.332-.582 1.794 1.794 0 0 1-.468-1.373l2.752-31.28A1.803 1.803 0 0 1 4.56 0zm-3.39 6.495H10.508a1.803 1.803 0 0 0-1.8 1.616L7.084 26.423c-.037.5.135.995.476 1.365.34.37.82.584 1.325.59h13.4a1.81 1.81 0 0 0 1.248-.496l5.478-5.197c.313-.303.505-.709.54-1.142l.736-8.138a1.794 1.794 0 0 0-.465-1.314l-4.326-4.976a1.81 1.81 0 0 0-1.362-.62zm-5.186 14.836c.17 0 .33.063.445.176.113.112.169.263.152.414l-.257 2.627c-.025.28-.285.494-.597.493h-2.906a.63.63 0 0 1-.445-.175.502.502 0 0 1-.152-.415l.257-2.626c.025-.28.285-.495.596-.494h2.907zM19.963 9.95c.327 0 .593.256.593.571l-.83 8.88a.585.585 0 0 1-.568.498h-2.96a.582.582 0 0 1-.593-.571l.806-8.875a.585.585 0 0 1 .592-.503h2.96z
+												view_box \0 0 37 43
 										<= discord_button $apxu_samosbor_map_app_menu_button sub / <= Discord $mol_link
 											hint \Тут выкладываются новости по карте
 											uri \https://discord.gg/XcrkVjrSUz
