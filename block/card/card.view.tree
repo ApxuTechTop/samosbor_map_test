@@ -324,8 +324,6 @@ $apxu_samosbor_map_block_card $mol_view
 							Trigger_icon <= current_type_select_icon null
 							Filter null
 				<= can_create_block_view $mol_view
-					attr *
-						edit-mode <= is_editor?
 					sub /
 						\Можно создать блок:
 						<= can_create_block_select $mol_select
