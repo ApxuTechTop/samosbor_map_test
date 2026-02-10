@@ -82,7 +82,7 @@ namespace $.$$ {
 		}
 
 		save_map_visible() {
-			if( this.is_editor() ) return [ this.save_map_elements() ]
+			if( this.is_editor() ) return this.save_map_elements()
 			return []
 		}
 
