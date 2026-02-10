@@ -142,9 +142,11 @@ namespace $ {
 		@$mol_mem_key
 		preset_no_current( role: typeof $apxu_samosbor_map_role.options[ number ] ) {
 			const current_key = $giper_baza_auth.current().public().toString()
-			return this.preset( role ).filter( ( [ pass ] ) => {
+			const preset = this.preset( role ).filter( ( [ pass ] ) => {
 				return pass?.toString() !== current_key
 			} )
+			console.log(preset)
+			return preset
 		}
 	}
 }
