@@ -233,7 +233,7 @@ namespace $.$$ {
 			for( const transition of this.block_data().transitions() ?? [] ) {
 				const from_block_ref = transition.from_block_ref()
 				if( !from_block_ref ) continue
-				if( this.block_data().link() === from_block_ref ) {
+				if( this.block_data().link().toString() === from_block_ref ) {
 					transition_views.push( this.Transition( transition ) )
 				}
 			}

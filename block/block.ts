@@ -34,7 +34,7 @@ namespace $ {
 
 		@$mol_mem
 		from_block_ref() {
-			return this.From()?.Block()?.val()
+			return this.From()?.Block()?.val()?.toString()
 		}
 
 		@$mol_action
