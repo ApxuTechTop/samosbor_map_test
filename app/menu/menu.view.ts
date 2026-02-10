@@ -81,10 +81,10 @@ namespace $.$$ {
 			return []
 		}
 
-		// save_map_visible() {
-		// 	if( this.is_editor() ) return [ this.save_map_button() ]
-		// 	return []
-		// }
+		save_map_visible() {
+			if( this.is_editor() ) return [ this.save_map_elements() ]
+			return []
+		}
 
 		@$mol_mem
 		search_results() {
