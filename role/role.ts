@@ -122,7 +122,7 @@ namespace $ {
 				return $giper_baza_rank_post( "just" )
 			}
 			if( current_role === "cartographer" && needed_role === "researcher" ) {
-				return $giper_baza_rank_post( "just" )
+				return $giper_baza_rank_pull( "just" )
 			}
 			return $giper_baza_rank_read
 		}
@@ -134,7 +134,6 @@ namespace $ {
 			for( const right of all_rights ?? [] ) {
 				preset.push( [ $giper_baza_auth_pass.from( right.key() ), this.rank_for_role( right.role(), role ) ] )
 			}
-			console.log( "RULER KEY", this.ruler_key() )
 			const ruler_pass = $giper_baza_auth_pass.from( this.ruler_key() )
 			preset.push( [ ruler_pass, $giper_baza_rank_rule ] )
 			return preset

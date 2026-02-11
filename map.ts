@@ -16,7 +16,6 @@ namespace $ {
 			const roles = this.roles()
 			if( can_rule ) {
 				const cartographers_preset = roles.preset_no_current( "cartographer" )
-				console.log( cartographers_preset )
 				cartographers_preset.map( ( [ key, rank ] ) => {
 					const lord = $giper_baza_auth.from( key!.toString() ).pass().lord()
 					if( gigacluster.land().lord_pass( lord ) )
@@ -29,7 +28,7 @@ namespace $ {
 		@$mol_action
 		create_block() {
 			const roles = this.roles()
-			const researchers_preset = roles.preset_no_current( "researcher" )
+			const researchers_preset = roles.preset_no_current( "cartographer" )
 			const current_auth = $giper_baza_auth.current()
 			const block = this.gigacluster()?.Blocks( true )?.make( [ ...( researchers_preset ), [ null, $giper_baza_rank_read ] ] ) // { ...researchers_preset, '': $giper_baza_rank_join( "just" ) }
 			console.log( "created", block )
@@ -40,7 +39,7 @@ namespace $ {
 			const gigacluster = this.gigacluster()
 			const blocks = gigacluster?.blocks()
 			const roles = this.roles()
-			const researchers_preset = roles.preset_no_current( "researcher" ).filter( ( [ pass ] ) => pass?.toString() !== roles.ruler_key() )
+			const researchers_preset = roles.preset_no_current( "cartographer" ).filter( ( [ pass ] ) => pass?.toString() !== roles.ruler_key() )
 			blocks?.map( ( block ) => {
 				const land = block.land()
 				const can_rule = land.lord_rank( $giper_baza_auth.current().pass().lord() ) == $giper_baza_rank_rule

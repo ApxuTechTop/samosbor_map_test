@@ -414,7 +414,7 @@ namespace $ {
 			}
 			const Gigacluster = await $mol_wire_async( map ).Gigacluster( true )
 			if( !Gigacluster ) return
-			const gigacluster = await $mol_wire_async( Gigacluster ).ensure()
+			const gigacluster = await $mol_wire_async( Gigacluster ).ensure([ [ null, $giper_baza_rank_make( "read", "just" ) ] ])
 			if( !gigacluster ) return
 			const Blocks = await $mol_wire_async( gigacluster ).Blocks( true )
 			if( !Blocks ) return
@@ -430,7 +430,7 @@ namespace $ {
 					saved_nodes[ block_ref ] = block
 					return block
 				}
-				const block = await blocks_node.make( get_read_preset() )
+				const block = await blocks_node.make( [[null, $giper_baza_rank_read]] )
 				saved_nodes[ block_ref ] = block
 				return block
 			}
@@ -475,55 +475,26 @@ namespace $ {
 				await process_flight_data( "LeftFlight", block_data.LeftFlight )
 				await process_flight_data( "MiddleFlight", block_data.MiddleFlight )
 				await process_flight_data( "RightFlight", block_data.RightFlight )
-				// block.LeftFlight(block_data.LeftFlight)?.Status(block_data.LeftFlight.Status)?.val(block_data.LeftFlight.Status)
-				// block.LeftFlight(block_data.LeftFlight)?.Type(block_data.LeftFlight.Type)?.val(block_data.LeftFlight.Type)
-				// block.MailFloor(block_data.MailFloor)?.val(block_data.MailFloor)
-				// block.MaxFloor(block_data.MaxFloor)?.val(block_data.MaxFloor)
-				// block.MiddleFlight(block_data.MiddleFlight)?.Status(block_data.MiddleFlight.Status)?.val(block_data.MiddleFlight.Status)
-				// block.MiddleFlight(block_data.MiddleFlight)?.Status(block_data.MiddleFlight.Type)?.val(block_data.MiddleFlight.Type)
-				// block.MinFloor(block_data.MinFloor)?.val(block_data.MinFloor)
-				// block.Name(block_data.Name)?.val(block_data.Name)
+				
+
+				const Places = await async_block.Places( block_data.Places )
+				const Professions = await async_block.Professions( block_data.Professions )
 				const process_place_data = async ( node: any, data: any ) => {
 					if( node ) {
 						for( const place of data ?? [] ) {
-							const new_place = await $mol_wire_async( node ).make( null )
+							const new_place = await $mol_wire_async( node ).make( [[null, $giper_baza_rank_read]] )
 							if( !new_place ) continue
 							const async_place = $mol_wire_async( new_place )
 							const Floor = await async_place.Floor( place.Floor )
 							if( Floor ) await $mol_wire_async( Floor ).val( place.Floor )
 							const Type = await async_place.Type( place.Type )
-							if( Type ) await $mol_wire_async( Type ).val( place.Type )
+							if( Type ) await $mol_wire_async( Type ).val( place.Type! )
 						}
 					}
 				}
-
-				const Places = await async_block.Places( block_data.Places )
 				await process_place_data( Places, block_data.Places )
-				// if (Places) {
-				// 	for (const place of block_data.Places ?? []) {
-				// 		const new_place = await $mol_wire_async(Places).make(null)
-				// 		if (!new_place) continue;
-				// 		const async_place = $mol_wire_async(new_place)
-				// 		const Floor = await async_place.Floor(place.Floor)
-				// 		if (Floor) await $mol_wire_async(Floor).val(place.Floor)
-				// 		const Type = await async_place.Type(place.Type)
-				// 		if (Type) await $mol_wire_async(Type).val(place.Type)
-				// 	}
-				// }
-
-				// block.PositionX(block_data.PositionX)?.val(block_data.PositionX)
-				// block.PositionY(block_data.PositionY)?.val(block_data.PositionY)
-				const Professions = await async_block.Professions( block_data.Professions )
 				await process_place_data( Professions, block_data.Professions )
-				// block_data.Professions?.forEach((profession) => {
-				// 	const new_profession = block.Professions(true)?.make(null)
-				// 	new_profession?.Floor(profession.Floor)?.val(profession.Floor)
-				// 	new_profession?.Type(profession.Type)?.val(profession.Type)
-				// })
 
-				// block.RightFlight(block_data.RightFlight)?.Status(block_data.RightFlight.Status)?.val(block_data.RightFlight.Status)
-				// block.RightFlight(block_data.RightFlight)?.Type(block_data.RightFlight.Type)?.val(block_data.RightFlight.Type)
-				// block.RoofFloor(block_data.RoofFloor)?.val(block_data.RoofFloor)
 				const FloorsData = await async_block.FloorsData( block_data.FloorsData )
 				if( FloorsData ) {
 					const AsyncFloorsData = $mol_wire_async( FloorsData )
@@ -553,10 +524,6 @@ namespace $ {
 					}
 				}
 
-
-
-				// // TODO all
-
 				const transition_refs = saved_block_nodes[ block_ref ].Transitions as string[]
 				const Transitions = await async_block.Transitions( true )
 				if( Transitions ) {
@@ -565,7 +532,7 @@ namespace $ {
 						if( saved_nodes[ transition_ref ] ) {
 							await AsyncTransitions.remote_add( saved_nodes[ transition_ref ] )
 						} else {
-							const transition_node = await AsyncTransitions.make( null )
+							const transition_node = await AsyncTransitions.make( [[null, $giper_baza_rank_read]] )
 							const transition = $mol_wire_async( transition_node )
 							const From = await transition.From( true )
 							const process_port = async ( port: TransitionPort | null, data: typeof transition_data.From ) => {
@@ -585,20 +552,6 @@ namespace $ {
 							await process_port( From, transition_data.From )
 							const To = await transition.To( true )
 							await process_port( To, transition_data.To )
-							// if (transition_data.From.Block != undefined) {
-							// 	const from_block_ref = this.get_object_ref(await get_block(transition_data.From.Block))
-							// 	const Block = await AsyncFrom.Block(true)
-							// 	if (Block) await $mol_wire_async(Block).val(from_block_ref)
-							// }
-							// const Floor = await AsyncFrom.Floor(transition_data.From.Floor)
-							// if (Floor) await $mol_wire_async(Floor).val(transition_data.From.Floor)
-							// transition.From(true)?.Position(true)?.val(transition_data.From.Position)
-							// if (transition_data.To.Block != undefined) {
-							// 	const to_block_ref = this.get_object_ref(await get_block(transition_data.To.Block))
-							// 	transition.To(true)?.Block(true)?.val(to_block_ref)
-							// }
-							// transition.To(true)?.Floor(true)?.val(transition_data.To.Floor)
-							// transition.To(true)?.Position(true)?.val(transition_data.To.Position)
 
 							saved_nodes[ transition_ref ] = transition_node
 
@@ -606,11 +559,6 @@ namespace $ {
 						}
 					}
 				}
-
-
-
-
-				// block.Type(block_data.Type)?.val(block_data.Type)
 			}
 		}
 	}
