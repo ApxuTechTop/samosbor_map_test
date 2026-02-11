@@ -249,10 +249,10 @@ namespace $ {
 		}
 		// static get_object_ref( object: $hyoo_crus_node ): $hyoo_crus_ref
 		// static get_object_ref(object: $giper_baza_node): $giper_baza_link;
-		static get_object_ref( object: $hyoo_crus_node | $giper_baza_pawn ): $giper_baza_link {
+		static async get_object_ref( object: $hyoo_crus_node | $giper_baza_pawn ): Promise<$giper_baza_link> {
 			const crus_object = object as $hyoo_crus_node
 			const giper_object = object as $giper_baza_pawn
-			return giper_object.link()
+			return await $mol_wire_async(giper_object).link()
 			if( use_giper_baza ) {
 				
 			} else {
@@ -260,8 +260,8 @@ namespace $ {
 			}
 		}
 
-		static get_object_string_ref( object: $hyoo_crus_node | $giper_baza_pawn ) {
-			return this.ref_to_string( this.get_object_ref( object as any ) )
+		static async get_object_string_ref( object: $hyoo_crus_node | $giper_baza_pawn ) {
+			return this.ref_to_string( await this.get_object_ref( object as any ) )
 		}
 
 		static get_transition_data = ( transition: TransitionData ) => {
@@ -381,7 +381,7 @@ namespace $ {
 					} ),
 					Title: block.Title()?.val(),
 					Transitions: block.Transitions()?.remote_list().map( ( transition ) => {
-						const transition_ref = this.get_object_string_ref( transition )
+						const transition_ref = $mol_wire_sync(this).get_object_string_ref( transition )
 						if( transition_ref && !saved_transition_nodes[ transition_ref ] ) {
 							saved_transition_nodes[ transition_ref ] = this.get_transition_data( transition )
 						}
@@ -396,7 +396,7 @@ namespace $ {
 
 			for( const block of blocks ) {
 				const block_data = get_block_data( block )
-				const block_ref = this.get_object_string_ref( block )
+				const block_ref = $mol_wire_sync(this).get_object_string_ref( block )
 				if( !block_ref ) {
 					console.error( "No block ref", block )
 					continue
@@ -408,10 +408,11 @@ namespace $ {
 			return deepConvertBigIntToNumber( { result, saved_block_nodes, saved_transition_nodes } )
 		}
 
-		static async load_map( map: $apxu_samosbor_map, result: { Gigacluster: { Blocks: string[] } }, saved_block_nodes: ( NonNullable<ReturnType<typeof $apxu_samosbor_map_storage.save_map>> )[ "saved_block_nodes" ], saved_transition_nodes: ( NonNullable<ReturnType<typeof $apxu_samosbor_map_storage.save_map>> )[ "saved_transition_nodes" ] ) {
-			const get_read_preset = () => {
-				return [[null, $giper_baza_rank_read]] as $giper_baza_rank_preset
-			}
+		static async load_map( map: $apxu_samosbor_map, result: { 
+				Gigacluster: { Blocks: string[] } 
+			}, 
+			saved_block_nodes: ( NonNullable<ReturnType<typeof $apxu_samosbor_map_storage.save_map>> )[ "saved_block_nodes" ], 
+			saved_transition_nodes: ( NonNullable<ReturnType<typeof $apxu_samosbor_map_storage.save_map>> )[ "saved_transition_nodes" ] ) {
 			const Gigacluster = await $mol_wire_async( map ).Gigacluster( true )
 			if( !Gigacluster ) return
 			const gigacluster = await $mol_wire_async( Gigacluster ).ensure([ [ null, $giper_baza_rank_make( "read", "just" ) ] ])
@@ -532,14 +533,14 @@ namespace $ {
 						if( saved_nodes[ transition_ref ] ) {
 							await AsyncTransitions.remote_add( saved_nodes[ transition_ref ] )
 						} else {
-							const transition_node = await AsyncTransitions.make( [[null, $giper_baza_rank_read]] )
-							const transition = $mol_wire_async( transition_node )
-							const From = await transition.From( true )
+							const transition = await AsyncTransitions.make( [[null, $giper_baza_rank_read]] )
+							const async_transition = $mol_wire_async( transition )
+							const From = await async_transition.From( true )
 							const process_port = async ( port: TransitionPort | null, data: typeof transition_data.From ) => {
 								if( !port ) return
 								const async_port = $mol_wire_async( port )
 								if( data.Block != undefined ) {
-									const from_block_ref = this.get_object_ref( await get_block( data.Block ) )
+									const from_block_ref = await this.get_object_ref( await get_block( data.Block ) )
 									const Block = await async_port.Block( true )
 									if( Block ) await $mol_wire_async( Block ).val( from_block_ref )
 								}
@@ -550,10 +551,10 @@ namespace $ {
 							}
 							const transition_data = saved_transition_nodes[ transition_ref ]
 							await process_port( From, transition_data.From )
-							const To = await transition.To( true )
+							const To = await async_transition.To( true )
 							await process_port( To, transition_data.To )
 
-							saved_nodes[ transition_ref ] = transition_node
+							saved_nodes[ transition_ref ] = transition
 
 
 						}
